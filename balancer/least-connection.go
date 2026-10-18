@@ -9,7 +9,7 @@ type Server struct {
 
 type ServerPool []*Server
 
-func intitServers() (ServerPool, error) {
+func initServers() (ServerPool, error) {
 	servers := []string{
 		"http://localhost:8000",
 		"http://localhost:8001",
