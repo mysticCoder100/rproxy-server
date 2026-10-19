@@ -6,7 +6,7 @@ import (
 
 // Test 1: Verify that initServers correctly loads and parses the backend pool
 func TestInitServers(t *testing.T) {
-	pool, err := initServers()
+	pool, err := InitServers()
 	if err != nil {
 		t.Fatalf("expected no error initializing servers, got %v", err)
 	}
@@ -17,8 +17,8 @@ func TestInitServers(t *testing.T) {
 	}
 
 	// Verify the first server URL parsed correctly
-	if pool[0].url.Host != "localhost:8000" {
-		t.Errorf("expected host localhost:8000, got %s", pool[0].url.Host)
+	if pool[0].Url.Host != "localhost:8000" {
+		t.Errorf("expected host localhost:8000, got %s", pool[0].Url.Host)
 	}
 }
 

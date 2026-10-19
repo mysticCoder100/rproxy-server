@@ -1,15 +1,19 @@
 package balancer
 
-import "net/url"
+import (
+	"net/url"
+	"sync"
+)
 
 type Server struct {
-	url   *url.URL
+	Url   *url.URL
 	count uint64
+	mutex sync.Mutex
 }
 
 type ServerPool []*Server
 
-func initServers() (ServerPool, error) {
+func InitServers() (ServerPool, error) {
 	servers := []string{
 		"http://localhost:8000",
 		"http://localhost:8001",
@@ -25,7 +29,7 @@ func initServers() (ServerPool, error) {
 			return nil, err
 		}
 
-		hydratedUrl := &Server{parsedServer, 0}
+		hydratedUrl := &Server{Url: parsedServer, count: 0}
 
 		pool = append(pool, hydratedUrl)
 	}
@@ -48,4 +52,20 @@ func (pool ServerPool) NextServer() *Server {
 	}
 
 	return freeServer
+}
+
+func (s *Server) IncrementCount() {
+	s.mutex.Lock()
+	s.count++
+	s.mutex.Unlock()
+}
+
+func (s *Server) GetCount() uint64 {
+	return s.count
+}
+
+func (s *Server) DecrementCount() {
+	s.mutex.Lock()
+	s.count--
+	s.mutex.Unlock()
 }
